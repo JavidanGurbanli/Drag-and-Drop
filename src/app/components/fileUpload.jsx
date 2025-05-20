@@ -304,31 +304,41 @@ const S3FileUploader = () => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full max-w-lg mx-auto py-10">
       <div
         {...getRootProps()}
-        className={`border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition-all duration-300
-      ${
-        isDragActive
-          ? "border-purple-500 bg-purple-50 shadow-lg"
-          : "border-gray-300 hover:border-purple-400 hover:bg-purple-50"
-      }`}
+        className={`border-4 border-dashed rounded-3xl p-10 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 bg-gradient-to-br from-blue-100 via-cyan-50 to-slate-100 shadow-xl
+        ${
+          isDragActive
+            ? "border-blue-500 bg-blue-50 scale-105"
+            : "border-cyan-400 hover:border-blue-400 hover:bg-blue-50"
+        }`}
       >
         <input {...getInputProps()} />
-        <Upload className="w-12 h-12 text-purple-400 mb-2 animate-pulse" />
-        <p className="text-lg font-semibold text-purple-700">
-          Drag & drop files here
+        <div className="bg-gradient-to-tr from-blue-500 to-cyan-400 rounded-full p-4 mb-3 shadow-lg">
+          <Upload className="w-14 h-14 text-white animate-bounce" />
+        </div>
+        <p className="text-xl font-extrabold text-blue-700 mb-1">
+          Drop files here
         </p>
-        <p className="text-sm text-purple-500">or click to select files</p>
-        <p className="text-xs text-purple-400 mt-2">
-          Supported: JPG, PNG, PDF, DOC, XLS, TXT • Max size: 100MB
+        <p className="text-base text-cyan-700 mb-2">or click to browse</p>
+        <div className="flex flex-wrap gap-2 justify-center text-xs mt-2">
+          <span className="bg-blue-200 text-blue-700 px-2 py-1 rounded-full font-semibold">JPG</span>
+          <span className="bg-cyan-200 text-cyan-700 px-2 py-1 rounded-full font-semibold">PNG</span>
+          <span className="bg-green-200 text-green-700 px-2 py-1 rounded-full font-semibold">PDF</span>
+          <span className="bg-yellow-200 text-yellow-700 px-2 py-1 rounded-full font-semibold">DOC</span>
+          <span className="bg-sky-200 text-sky-700 px-2 py-1 rounded-full font-semibold">XLS</span>
+          <span className="bg-slate-200 text-slate-700 px-2 py-1 rounded-full font-semibold">TXT</span>
+        </div>
+        <p className="text-xs text-gray-400 mt-3">
+          Max size: <span className="font-bold text-blue-600">100MB</span>
         </p>
       </div>
       {errorMessage && (
-        <div className="mt-4 p-4 bg-red-100 border border-red-300 rounded-lg flex items-start shadow">
-          <AlertCircle className="w-5 h-5 text-red-600 mr-2 flex-shrink-0 mt-0.5" />
+        <div className="mt-6 p-4 bg-gradient-to-r from-red-100 via-orange-100 to-yellow-100 border border-red-300 rounded-xl flex items-start shadow-lg animate-shake">
+          <AlertCircle className="w-6 h-6 text-red-600 mr-3 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm text-red-800">{errorMessage}</p>
+            <p className="text-base text-red-800 font-semibold">{errorMessage}</p>
             <button
               className="text-xs text-red-700 mt-1 hover:underline"
               onClick={() => setErrorMessage("")}
@@ -339,60 +349,67 @@ const S3FileUploader = () => {
         </div>
       )}
       {files.length > 0 && (
-        <div className="mt-6 space-y-4">
-          <h3 className="text-base font-bold text-purple-700">
-            Files ({files.length})
+        <div className="mt-10 space-y-6">
+          <h3 className="text-lg font-bold text-blue-700 mb-2 flex items-center gap-2">
+            <span className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white px-3 py-1 rounded-full shadow">{files.length}</span>
+            Files
           </h3>
-
-          <div className="space-y-4">
+          <div className="space-y-6">
             {files.map((file) => (
               <div
                 key={file.id}
-                className="bg-gradient-to-r from-white via-purple-50 to-white rounded-xl border border-purple-200 p-4 shadow-md hover:shadow-lg transition-all"
+                className="bg-gradient-to-r from-white via-blue-50 to-cyan-50 rounded-2xl border border-blue-200 p-5 shadow-lg hover:shadow-2xl transition-all"
               >
-                <div className="flex items-center space-x-4">
-                  {getFilePreview(file)}
-
+                <div className="flex items-center space-x-5">
+                  <div className="flex-shrink-0">{getFilePreview(file)}</div>
                   <div className="flex-1 min-w-0">
                     <p
-                      className="text-sm font-semibold text-gray-800 truncate"
+                      className="text-base font-bold text-gray-800 truncate"
                       title={file.name}
                     >
                       {file.name}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 font-medium">
                       {formatFileSize(file.size)}
                     </p>
                   </div>
-
                   <div className="flex items-center space-x-2">
                     {renderActionButtons(file)}
-
                     <button
-                      className="p-1 text-gray-400 hover:text-red-600 transition cursor-pointer"
+                      className="p-1 rounded-full bg-red-50 hover:bg-red-200 text-red-500 hover:text-red-700 transition cursor-pointer"
                       onClick={() => cancelUpload(file.id)}
                       title="Remove file"
                     >
-                      <X className="w-4 h-4" />
+                      <X className="w-5 h-5" />
                     </button>
                   </div>
                 </div>
-                <div className="mt-3">
-                  <div className="w-full bg-purple-100 rounded-full h-2 overflow-hidden">
+                <div className="mt-4">
+                  <div className="w-full bg-gradient-to-r from-blue-100 via-cyan-100 to-slate-100 rounded-full h-3 overflow-hidden">
                     <div
-                      className={`h-full rounded-full transition-all duration-500 ease-in-out ${progressBarColorClass(
+                      className={`h-full rounded-full transition-all duration-700 ease-in-out ${progressBarColorClass(
                         file.status
                       )}`}
-                      style={{ width: `${file.progress}%` }}
+                      style={{
+                        width: `${file.progress}%`,
+                        boxShadow:
+                          file.status === "completed"
+                            ? "0 0 10px 2px #22c55e"
+                            : file.status === "error"
+                            ? "0 0 10px 2px #ef4444"
+                            : "0 0 10px 2px #0ea5e9",
+                      }}
                     />
                   </div>
-                  <div className="mt-2 flex justify-between items-center text-xs font-medium">
+                  <div className="mt-2 flex justify-between items-center text-xs font-semibold">
                     <div
                       className={`${
                         file.status === "error"
                           ? "text-red-600"
-                          : "text-purple-600"
-                      }`}
+                          : file.status === "completed"
+                          ? "text-green-600"
+                          : "text-blue-600"
+                      } flex items-center gap-1`}
                     >
                       {renderStatusText(file)}
                     </div>
@@ -405,6 +422,6 @@ const S3FileUploader = () => {
       )}
     </div>
   );
-};
-
+}
 export default S3FileUploader;
+ 
